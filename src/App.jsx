@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Login from './pages/Login';
 import Register from './pages/Register';
-import DashboardAdmin from './pages/DashboardAdmin';
-import DashboardCustomer from './pages/DashboardCustomer';
+import DashboardCustomer from "./pages/customer/DashboardCustomer";
+
+import Dashboard from './pages/admin/Dashboard';
+import Menus from "./pages/admin/Menus";
+import AddMenu from "./pages/admin/AddMenu";
+import Users from "./pages/admin/Users";
+import AdminLayout from "./pages/AdminLayout";
+
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -14,6 +20,7 @@ function App() {
     localStorage.removeItem("role");
     setToken(null);
     setRole(null);
+    navigator.replace("/");
   };
 
   useEffect(() => {
@@ -27,29 +34,21 @@ function App() {
         <Route 
           path="/" 
           element={token ? (
-            <Navigate to={role === "admin" ? "/admin-dashboard" : "/customer-dashboard"} replace />
+            <Navigate to={role === "admin" ? "/admin/dashboard" : "/customer-dashboard"} replace />
           ) : (
             <Login setToken={setToken} setRole={setRole} />
           )}
         />
         <Route path="/register" element={<Register />} />
-        <Route 
-          path="/admin-dashboard" 
-          element={token && role === "admin" ? (
-            <DashboardAdmin handleLogout={handleLogout} />
-          ) : (
-            <Navigate to="/" replace />
-          )}
-        />
-        <Route 
-          path="/customer-dashboard" 
-          element={token && role === "customer" ? (
-            <DashboardCustomer handleLogout={handleLogout} />
-          ) : (
-            <Navigate to="/" replace />
-          )}
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/admin/*" element={<AdminLayout handleLogout={handleLogout}>
+          <Routes>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="menu" element={<Menus />} />
+            <Route path="post-menu" element={<AddMenu />} />
+            <Route path="users" element={<Users />} />
+          </Routes>
+        </AdminLayout>} />
+        <Route path="/customer-dashboard" element={<DashboardCustomer />} />
       </Routes>
     </Router>
   );

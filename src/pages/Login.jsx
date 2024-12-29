@@ -8,6 +8,7 @@ const Login = ({ setToken  , setRole}) => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -38,6 +39,9 @@ const Login = ({ setToken  , setRole}) => {
       setError("Tidak dapat login. Silakan coba lagi nanti.");
     }
   };
+
+
+
 
   return (
     <div className="hero min-h-screen flex items-center justify-center">
