@@ -10,17 +10,16 @@ import AddMenu from "./pages/admin/AddMenu";
 import Users from "./pages/admin/Users";
 import AdminLayout from "./pages/AdminLayout";
 
-
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [role, setRole] = useState(localStorage.getItem("role"));
-  
+
   const handleLogout = () => {
+    console.log('logout');
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     setToken(null);
     setRole(null);
-    navigator.replace("/");
   };
 
   useEffect(() => {
@@ -40,15 +39,17 @@ function App() {
           )}
         />
         <Route path="/register" element={<Register />} />
-        <Route path="/admin/*" element={<AdminLayout handleLogout={handleLogout}>
-          <Routes>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="menu" element={<Menus />} />
-            <Route path="post-menu" element={<AddMenu />} />
-            <Route path="users" element={<Users />} />
-          </Routes>
-        </AdminLayout>} />
-        <Route path="/customer-dashboard" element={<DashboardCustomer />} />
+        <Route path="/admin/*" element={
+          <AdminLayout handleLogout={handleLogout}>
+            <Routes>
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="menu" element={<Menus />} />
+              <Route path="post-menu" element={<AddMenu />} />
+              <Route path="users" element={<Users />} />
+            </Routes>
+          </AdminLayout>
+        } />
+        <Route path="/customer-dashboard" element={<DashboardCustomer handleLogout={handleLogout} />} />
       </Routes>
     </Router>
   );

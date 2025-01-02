@@ -25,6 +25,8 @@ const Login = ({ setToken  , setRole}) => {
         setRole(role);
         localStorage.setItem("token", access_token);
         localStorage.setItem("role", role);
+        localStorage.setItem("username", username);
+
 
         setError(""); // Reset error
         if (role === "admin") {

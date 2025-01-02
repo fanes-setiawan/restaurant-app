@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { FaHome, FaHamburger, FaUsers, FaShoppingCart, FaCog, FaBars, FaTimes } from "react-icons/fa"; // Import Icons
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -9,57 +10,59 @@ const Sidebar = () => {
     if (storedIndex) {
       setActiveIndex(Number(storedIndex));
     } else {
-      setActiveIndex(0); 
+      setActiveIndex(0);
     }
   }, []);
 
   const handleMenuClick = (index) => {
-    setActiveIndex(index); 
+    setActiveIndex(index);
     localStorage.setItem("activeIndex", index);
   };
 
+  const menuItems = [
+    { name: "Dashboard", icon: <FaHome /> },
+    { name: "Menu", icon: <FaHamburger /> },
+    { name: "Orders", icon: <FaShoppingCart /> },
+    { name: "Users", icon: <FaUsers /> },
+    { name: "Settings", icon: <FaCog /> },
+  ];
+
   return (
-    <div className="sidebar w-64 h-screen bg-gray-800 text-white fixed">
-      <div className="p-6 text-xl font-bold border-b border-gray-700">
+    <div
+      className={`sidebar w-64 h-screen bg-gradient-to-b from-yellow-600 to-orange-700 text-white fixed shadow-lg transition-all duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+    >
+      <div className="p-6 text-2xl font-semibold tracking-wide border-b border-yellow-500">
         Admin Panel
       </div>
-      <nav className="mt-4">
-        <ul>
-          <li
-            className={`px-6 py-2 hover:bg-gray-700 ${activeIndex === 0 ? 'bg-gray-700' : ''}`}
-            onClick={() => handleMenuClick(0)}
-          >
-            <NavLink to="/admin/dashboard" className="block">Dashboard</NavLink>
-          </li>
-          <li
-            className={`px-6 py-2 hover:bg-gray-700 ${activeIndex === 1 ? 'bg-gray-700' : ''}`}
-            onClick={() => handleMenuClick(1)}
-          >
-            <NavLink to="/admin/menu" className="block">Menu</NavLink>
-          </li>
-          <li
-            className={`px-6 py-2 hover:bg-gray-700 ${activeIndex === 2 ? 'bg-gray-700' : ''}`}
-            onClick={() => handleMenuClick(2)}
-          >
-            <NavLink to="/admin/post-menu" className="block">Add Produk</NavLink>
-          </li>
-          <li
-            className={`px-6 py-2 hover:bg-gray-700 ${activeIndex === 3 ? 'bg-gray-700' : ''}`}
-            onClick={() => handleMenuClick(3)}
-          >
-            <NavLink to="/admin/users" className="block">Users</NavLink>
-          </li>
-          <li
-            className="px-6 py-2 hover:bg-gray-700"
-            onClick={() => {
-              localStorage.clear();
-              setActiveIndex(0); // Reset ke index 0 saat logout
-            }}
-          >
-            <NavLink to="/" className="block">Logout</NavLink>
-          </li>
+      <nav className="mt-6">
+        <ul className="space-y-3">
+          {menuItems.map((item, index) => (
+            <li
+              key={index}
+              className={`px-6 py-3 rounded-lg cursor-pointer transition-colors ${
+                activeIndex === index ? "bg-orange-800" : "hover:bg-yellow-500"
+              }`}
+              onClick={() => handleMenuClick(index)}
+            >
+              <NavLink
+                to={`/admin/${item.name.toLowerCase()}`}
+                className="flex items-center space-x-4 text-white font-medium"
+              >
+                <span>{item.icon}</span>
+                <span>{item.name}</span>
+              </NavLink>
+            </li>
+          ))}
         </ul>
       </nav>
+      <div className="absolute top-4 right-4">
+        <button
+          className="text-white bg-yellow-600 rounded-full p-2 hover:bg-yellow-500 focus:outline-none"
+          onClick={toggleSidebar}
+        >
+          {isOpen ? <FaTimes /> : <FaBars />}
+        </button>
+      </div>
     </div>
   );
 };
