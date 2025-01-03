@@ -1,22 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import { getAllMenus } from '../../services/menus'; // import the service
+import { getAllMenus } from '../../services/menus';
+import { getAllUsers } from '../../services/users';
+import { getAllOrders } from '../../services/orders';
 
 const Dashboard = () => {
   const [menus, setMenus] = useState([]);
-  const [totalPurchases, setTotalPurchases] = useState(0);
-  const [tasksDone, setTasksDone] = useState(0);
+  const [account, setAccount] = useState([]);
+  const [users, setUsers] = useState(0);
+  const [orders, setOrders] = useState([]);
+  const [admin, setAdmin] = useState(0);
 
   useEffect(() => {
     fetchMenus();
+    fetchUsers();
+    fetchOrders();
   }, []);
 
   const fetchMenus = async () => {
     try {
       const menuData = await getAllMenus();
       setMenus(menuData); 
-      console.log('Menu data:', menuData.count);
     } catch (error) {
       console.error('Error fetching menus:', error);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const userData = await getAllUsers();
+      setAccount(userData);
+      if (userData.users != null) {
+        console.log("TIDAK NULLLL");
+        console.log(userData.users);
+        
+        let userCount = 0;
+        let adminCount = 0;
+        for (let data of userData.users) {
+          console.log(data.role);
+          
+          if (data.role === "admin") {
+            adminCount++;
+          } else {
+            userCount++;
+          }
+        }
+        setUsers(userCount);
+        setAdmin(adminCount);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+  const fetchOrders = async () => {
+    try {
+      const orderData = await getAllOrders();
+      setOrders(orderData);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
     }
   };
 
@@ -37,8 +77,8 @@ const Dashboard = () => {
           </svg>
         </div>
         <div className="stat-title">Total Menu</div>
-        <div className="stat-value text-primary">{menus.count}</div> 
-        <div className="stat-desc">Anda mempunya {menus.count} menu</div>
+        <div className="stat-value text-primary">{menus.count}</div> {/* Display dynamic menu count */}
+        <div className="stat-desc">you have {menus.count} menus</div>
       </div>
 
       <div className="stat">
@@ -56,7 +96,7 @@ const Dashboard = () => {
           </svg>
         </div>
         <div className="stat-title">Total Pembelian</div>
-        <div className="stat-value text-secondary">{totalPurchases}</div> {/* Display dynamic total purchases */}
+        <div className="stat-value text-secondary">{orders.length}</div> {/* Display dynamic total purchases */}
         <div className="stat-desc">21% more than last month</div>
       </div>
 
@@ -64,13 +104,13 @@ const Dashboard = () => {
         <div className="stat-figure text-secondary">
           <div className="avatar online">
             <div className="w-16 rounded-full">
-              <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+              <img src="https://media.istockphoto.com/id/1156423972/id/vektor/creative-chef-hat-spoon-fork-vektor-simbol-desain-ilustrasi.jpg?s=612x612&w=0&k=20&c=W7Ad-LHxfw6akZ2lsFcNy1l_xXgriErLfI95Z97MTng=" alt="Avatar" />
             </div>
           </div>
         </div>
-        <div className="stat-value">{tasksDone}%</div> {/* Display dynamic tasks completion */}
-        <div className="stat-title">Tasks done</div>
-        <div className="stat-desc text-secondary">31 tasks remaining</div>
+        <div className="stat-value">{account.count}</div> {/* Display dynamic account count */}
+        <div className="stat-title">Account</div>
+        <div className="stat-desc text-secondary">{users} Users dan {admin} Admin</div>
       </div>
     </div>
   );

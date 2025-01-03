@@ -9,6 +9,8 @@ import Menus from "./pages/admin/Menus";
 import AddMenu from "./pages/admin/AddMenu";
 import Users from "./pages/admin/Users";
 import AdminLayout from "./pages/AdminLayout";
+import Orders from "./pages/admin/orders";
+
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -44,6 +46,7 @@ function App() {
             <Routes>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="menu" element={<Menus />} />
+              <Route path="orders" element={<Orders />} />
               <Route path="post-menu" element={<AddMenu />} />
               <Route path="users" element={<Users />} />
             </Routes>
